@@ -16,21 +16,10 @@
 
 ## Quick Start
 
-### Try it Online
-
-Visit **[mockto.dev](https://mockto.dev)** to use Mockto in your browser—no installation required.
-
-### Use It Now
-
 1. **Upload or Paste**: Drag & drop an HTML file or paste your HTML directly
 2. **Configure**: Choose JSX/TSX format and your preferred CSS framework
 3. **Convert**: Click "Convert to React" and see the generated code instantly
 4. **Download**: Get your components as a ZIP file with all assets included
-
-## Screenshots
-
-![Mockto Interface](public/screenshot.png)
-*Convert HTML to React components in seconds*
 
 ## Features
 
