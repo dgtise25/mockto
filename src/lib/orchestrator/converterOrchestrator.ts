@@ -271,14 +271,26 @@ export class ConverterOrchestrator {
       const html = this.nodeToHtml(parsedDocument.root);
       const splitResult = this.splitter.split(html);
 
+      // Always ensure at least one component is returned
+      // If splitter found no components, create a default one from the root
+      const components = splitResult.components.length > 0
+        ? splitResult.components
+        : [{
+            id: 'component-0',
+            name: _options.componentName,
+            html: html,
+            depth: 0,
+            type: 'div',
+          }];
+
       return {
         stage: {
           name: 'split',
           status: 'complete',
           duration: performance.now() - stageStart,
-          message: `Split into ${splitResult.components.length} components`,
+          message: `Split into ${components.length} component${components.length !== 1 ? 's' : ''}`,
         },
-        components: splitResult.components,
+        components,
         warnings: [],
       };
     } catch (error) {

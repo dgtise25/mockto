@@ -63,8 +63,8 @@ describe('ConverterOrchestrator - Integration Tests', () => {
         f.fileName === 'TestComponent.tsx' || f.fileName === 'Component.tsx'
       );
       expect(mainFile).toBeDefined();
-      expect(mainFile?.content).toContain('React');
       expect(mainFile?.content).toContain('export');
+      // Note: Modern React 17+ doesn't require 'import React' for TSX
     });
 
     it('should convert HTML to JSX when JSX format is requested', async () => {

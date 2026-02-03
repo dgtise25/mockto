@@ -138,6 +138,24 @@ export class TSXGenerator extends JSXGenerator {
   }
 
   /**
+   * Generate component code (override to use 'tsx' parser for formatting)
+   * @param ast - HTML AST node
+   * @returns Generated component code
+   */
+  protected async generateComponent(ast: ASTNode): Promise<string> {
+    const imports = this.generateImports();
+    const componentBody = this.generateComponentBody(ast);
+    const component = this.assembleComponent(imports, componentBody);
+
+    // Format if Prettier is enabled - use 'tsx' parser instead of 'jsx'
+    if (this.options.formatting.prettier) {
+      return await this.formatter.format(component, 'tsx');
+    }
+
+    return component;
+  }
+
+  /**
    * Accessor for component name (from parent's options)
    */
   private get componentName(): string {
@@ -178,7 +196,8 @@ export class TSXGenerator extends JSXGenerator {
     const props = this.getAllProps();
 
     if (props.length === 0) {
-      return `interface ${this.componentName}Props {}\n\n`;
+      // Empty interface without semicolon (Prettier compatible)
+      return `export interface ${this.componentName}Props {}\n\n`;
     }
 
     const propsDefinitions = props
@@ -190,7 +209,7 @@ export class TSXGenerator extends JSXGenerator {
       })
       .join('\n');
 
-    return `interface ${this.componentName}Props {\n${propsDefinitions}\n}\n\n`;
+    return `export interface ${this.componentName}Props {\n${propsDefinitions}\n}\n\n`;
   }
 
   /**

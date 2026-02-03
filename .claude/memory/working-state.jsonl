@@ -439,3 +439,20 @@
 {"ts":1770149732007,"type":"file_edit","file":"/media/lyle/datadisk/dev/mockupconverter/public/mockto.svg","tool":"Write"}
 {"ts":1770149732118,"type":"command","cmd":"git status --short"}
 {"ts":1770149735842,"type":"file_edit","file":"/media/lyle/datadisk/dev/mockupconverter/index.html","tool":"Edit"}
+{"ts":1770149743425,"type":"command","cmd":"git add -A && git commit -m \"$(cat <<'EOF'\nfeat: rebrand project to \"Mockto\"\n\nRename project from \"mockupconverter\" to \"Mockto\" - a memorable,\nmodern name for the HTML Mockup to React Converter.\n\nChan"}
+{"ts":1770149786106,"type":"command","cmd":"npx vitest run tests/integration/converter.test.ts 2>&1 | head -80"}
+{"ts":1770149792302,"type":"file_edit","file":"/media/lyle/datadisk/dev/mockupconverter/tests/integration/converter.test.ts","tool":"Edit"}
+{"ts":1770149800736,"type":"command","cmd":"npx vitest run tests/integration/converter.test.ts -t \"should convert simple HTML to TSX\" 2>&1 | head -100"}
+{"ts":1770149822057,"type":"file_edit","file":"/media/lyle/datadisk/dev/mockupconverter/src/lib/orchestrator/converterOrchestrator.ts","tool":"Edit"}
+{"ts":1770149827907,"type":"command","cmd":"npx vitest run tests/integration/converter.test.ts 2>&1 | head -60"}
+{"ts":1770149834802,"type":"file_edit","file":"/media/lyle/datadisk/dev/mockupconverter/src/lib/converter/tsxGenerator.ts","tool":"Edit"}
+{"ts":1770149840375,"type":"command","cmd":"npx vitest run tests/integration/converter.test.ts 2>&1 | head -40"}
+{"ts":1770149854156,"type":"file_edit","file":"/media/lyle/datadisk/dev/mockupconverter/src/lib/converter/tsxGenerator.ts","tool":"Edit"}
+{"ts":1770149859536,"type":"command","cmd":"npx vitest run tests/integration/converter.test.ts 2>&1 | head -60"}
+{"ts":1770149867018,"type":"file_edit","file":"/media/lyle/datadisk/dev/mockupconverter/src/lib/converter/tsxGenerator.ts","tool":"Edit"}
+{"ts":1770149872659,"type":"command","cmd":"npx vitest run tests/integration/converter.test.ts 2>&1 | head -50"}
+{"ts":1770149879419,"type":"command","cmd":"npx vitest run tests/integration/converter.test.ts 2>&1 | tail -40"}
+{"ts":1770149887783,"type":"file_edit","file":"/media/lyle/datadisk/dev/mockupconverter/tests/integration/converter.test.ts","tool":"Edit"}
+{"ts":1770149894154,"type":"command","cmd":"npx vitest run tests/integration/converter.test.ts 2>&1 | tail -25"}
+{"ts":1770149906027,"type":"command","cmd":"npx vitest run tests/unit/ tests/integration/ 2>&1 | tail -40"}
+{"ts":1770149919974,"type":"command","cmd":"npx vitest run tests/integration/converter.test.ts 2>&1 | grep -E \"(Test Files|Tests|PASS|FAIL)\" | head -10"}
