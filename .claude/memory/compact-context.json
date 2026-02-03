@@ -1,0 +1,203 @@
+{
+  "version": 1,
+  "created": "2026-02-03T19:34:41.672Z",
+  "trigger": "auto",
+  "currentTask": "",
+  "decisions": [],
+  "filesModified": [
+    {
+      "path": "/media/lyle/datadisk/dev/mockupconverter/tests/unit/components/CodePreview.test.tsx",
+      "tool": "Edit"
+    },
+    {
+      "path": "/media/lyle/datadisk/dev/mockupconverter/src/lib/converter/nameGenerator.ts",
+      "tool": "Edit"
+    }
+  ],
+  "unresolvedIssues": [
+    {
+      "text": "I see the issue - the 'button' branch is at Priority 6, but the class name branch is at Priority 7. The test expects 'Btn' (from the class) but we're getting 'Button'. Let me adjust the button handling to come before the generic class name handling, but check if the class is meaningful:",
+      "score": 1.4938016595211794,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "We're down to 1 failing test! The issue is that the 'clickable' class name is being used instead of 'button' for the button element. Let me fix this by prioritizing the button tag name for button elements:",
+      "score": 1.4783619527125225,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "I see there are two functions - one is named correctly and one has the wrong signature. Let me fix this:",
+      "score": 1.4691366276365136,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "I have a typo and need to fix the button handling. Let me fix both issues:",
+      "score": 1.4568811097125514,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Now let me fix the sibling-based naming to extract the parent prefix from the sibling name, and add 'button' back:",
+      "score": 1.4446769238008361,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Let me fix the remaining 3 failing tests. First, let me fix the `toPascalCase` function to handle leading digits properly, and add 'button' back to the semantic elements:",
+      "score": 1.438594080349571,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Let me fix the remaining issues. The main problems are:\n1. Generic class names like 'container' should use context\n2. Sibling-based naming needs to properly extract parent prefix\n3. Names starting with numbers need proper handling",
+      "score": 1.4264668924562258,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "We're down to 5 failing tests. Let me address the remaining issues:\n\n1. **BEM modifiers test** - expects 'Btn' not 'Button'\n2. **Image role test** - needs 'image' type mapping\n3. **Descriptive Naming Enhancement** - needs more descriptive names\n4. **Context-Aware Naming** - sibling pattern not wo...",
+      "score": 1.4174051881692544,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "I see the issue - the class '123test' has leading digits. Let me fix the `toPascalCase` function to handle leading digits:",
+      "score": 1.4083723581391716,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Let me also fix the issue with numeric class names by checking the context test more closely:",
+      "score": 1.3993684023659778,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Now let me fix the sibling-based naming to properly extract the parent prefix:",
+      "score": 1.393381806437676,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Let me fix the remaining issues. I need to:\n1. Add special mapping for 'a' tag → 'Link' and 'img' tag → 'Image'\n2. Handle numeric-only classes\n3. Fix the context-aware naming for siblings",
+      "score": 1.3874080435124356,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Now let me fix the `generateFromClasses` function to handle numeric-only classes and update the `generateGenericName` function:",
+      "score": 1.3725297805877301,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "We're down to 7 failing tests. Let me fix the remaining issues:",
+      "score": 1.366600933173206,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Now let me add support for handling very long class names and fix the generateFromClasses function:",
+      "score": 1.3547817373533428,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "I see the issue - the naming convention values are `'PascalCase'`, `'kebab-case'`, `'camelCase'`, `'UPPER_CASE'`. Let me fix the switch statement:",
+      "score": 1.348891388948004,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Now let me fix the `applyNamingConvention` function to properly handle kebab-case and camelCase:",
+      "score": 1.3371491911465112,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Now let me fix the `toPascalCase` function to handle existing camelCase and fix the naming convention handling:",
+      "score": 1.3312973417503575,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Now I understand the test failures. Let me fix the nameGenerator implementation:",
+      "score": 1.3254583253572654,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Excellent progress! Here's the current test status:\n\n## Test Summary\n\n| Status | Count |\n|--------|-------|\n| **Passing Tests** | 667 |\n| **Failing Tests** | 25 |\n| **Total Tests** | 692 |\n\n### Completed Fixes:\n- **Component Tests**: 82/82 passing ✓\n  - Footer (10 tests)\n  - HtmlInput (18 tests)\n...",
+      "score": 1.3167238626483684,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Let me run the tailwindConverter test specifically to see the actual error details:",
+      "score": 1.30801827419636,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "The background task shows there are 29 failing tests in `tailwindConverter.test.ts`. Let me read both the test file and the implementation to fix these failures:",
+      "score": 1.2935731251249882,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Let me read the current state of the CodePreview test file and fix it properly:",
+      "score": 1.264923445789652,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "I see the issue - `navigator.clipboard` is read-only. Let me use `Object.defineProperty` to override it properly:",
+      "score": 1.2225504738051671,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "The issue is that the clipboard mock isn't being preserved. Let me create a local mock that's more reliable:",
+      "score": 1.2085865623486107,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "Let me check which tests are clearing mocks and causing the issue:",
+      "score": 1.2030234555213462,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "The issue is that `vi.clearAllMocks()` clears the spy functionality. Let me fix this:",
+      "score": 1.1891718328415797,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "The `navigator.clipboard` is read-only in jsdom. Let me fix the mock setup:",
+      "score": 1.175400416430949,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "The CodePreview test is failing because the clipboard mock isn't being tracked properly. Let me fix it:",
+      "score": 1.1644410318162226,
+      "cycleAge": 0,
+      "createdAt": 12
+    },
+    {
+      "text": "The line count test is still failing. Let me check if there's an issue with how the value is being processed. The output only shows \"12 character\" without the 's'. Let me check the component and fix the test:",
+      "score": 1.1345674048138734,
+      "cycleAge": 0,
+      "createdAt": 12
+    }
+  ],
+  "nextSteps": [],
+  "importantContext": [],
+  "schemaVersion": 1,
+  "cycleNumber": 12
+}

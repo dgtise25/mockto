@@ -1,0 +1,52 @@
+{
+  "sessionStart": 1770138073134,
+  "compactCycles": 12,
+  "collector": {
+    "invocations": 821,
+    "totalLatencyMs": 2043,
+    "fileEditsLogged": 512,
+    "commandsLogged": 309
+  },
+  "extractor": {
+    "invocations": 12,
+    "totalLatencyMs": 887,
+    "itemsClassified": 5879,
+    "itemsPreserved": 360,
+    "noiseFiltered": 5519,
+    "typeCounts": {
+      "error": 1010,
+      "goal": 147,
+      "file_edit": 2136,
+      "command": 939,
+      "read": 1561,
+      "decision": 86
+    },
+    "scoreDistribution": {
+      "min": 1.1345674048138734,
+      "max": 1.4938016595211794,
+      "avg": 1.3377
+    },
+    "lastTopScores": [
+      1.4938,
+      1.4784,
+      1.4691,
+      1.4569,
+      1.4447,
+      1.4386,
+      1.4265,
+      1.4174,
+      1.4084,
+      1.3994
+    ]
+  },
+  "restorer": {
+    "invocations": 12,
+    "totalLatencyMs": 11,
+    "totalCharsInjected": 44219,
+    "totalTokensInjected": 11058
+  },
+  "tokenBudget": {
+    "totalInjected": 11058,
+    "estimatedWastePrevented": 30000
+  }
+}
