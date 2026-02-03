@@ -20,10 +20,10 @@ export const SETTINGS_SCHEMA_VERSION = 1;
  * Storage key prefixes for namespacing
  */
 export enum StorageKeyPrefix {
-  SETTINGS = 'mockup-converter-settings',
-  CACHE = 'mockup-converter-cache',
-  HISTORY = 'mockup-converter-history',
-  TEMP = 'mockup-converter-temp',
+  SETTINGS = 'mockto-settings',
+  CACHE = 'mockto-cache',
+  HISTORY = 'mockto-history',
+  TEMP = 'mockto-temp',
 }
 
 /**
@@ -104,6 +104,10 @@ export interface ComponentSettings {
   componentNameTemplate: string;
   /** Whether to generate index files */
   generateIndexFiles: boolean;
+  /** Component style option */
+  componentStyle: 'functional' | 'class-based' | 'hooks-only';
+  /** Naming convention for components */
+  namingConvention: 'pascal-case' | 'camel-case' | 'kebab-case';
 }
 
 /**
@@ -120,6 +124,8 @@ export interface AdvancedSettings {
   enablePatternDetection: boolean;
   /** Custom attribute transformations */
   customTransformations: Record<string, string>;
+  /** Whether to extract assets separately */
+  extractAssets: boolean;
 }
 
 /**
@@ -138,6 +144,8 @@ export interface UISettings {
   enableWordWrap: boolean;
   /** Preview panel position */
   previewPosition: 'right' | 'bottom' | 'none';
+  /** Default output path for generated components */
+  outputPath: string;
 }
 
 /**
@@ -301,6 +309,8 @@ export const DEFAULT_COMPONENT_SETTINGS: ComponentSettings = {
   includeReactImport: false,
   componentNameTemplate: '{auto}',
   generateIndexFiles: true,
+  componentStyle: 'functional',
+  namingConvention: 'pascal-case',
 };
 
 export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
@@ -309,6 +319,7 @@ export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
   enableSemanticAnalysis: true,
   enablePatternDetection: true,
   customTransformations: {},
+  extractAssets: true,
 };
 
 export const DEFAULT_UI_SETTINGS: UISettings = {
@@ -318,6 +329,7 @@ export const DEFAULT_UI_SETTINGS: UISettings = {
   showLineNumbers: true,
   enableWordWrap: true,
   previewPosition: 'right',
+  outputPath: './src/components',
 };
 
 /**

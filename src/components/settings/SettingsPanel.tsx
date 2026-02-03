@@ -3,13 +3,15 @@
  * Settings form with all configuration options
  */
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   Settings,
   RotateCcw,
   Download,
   Upload,
   Keyboard,
+  Save,
+  FloppyDisk,
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -53,23 +55,49 @@ const DEFAULT_SETTINGS: ConverterSettings = {
 };
 
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({
-  settings,
+  settings: initialSettings,
   onChange,
   className,
   showShortcuts = false,
   onExport,
   onImport,
 }) => {
-  const updateSetting = useCallback(
+  // Local state for unsaved changes
+  const [localSettings, setLocalSettings] = useState<ConverterSettings>(initialSettings);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  // Update local settings when props change (e.g., from external load)
+  useEffect(() => {
+    setLocalSettings(initialSettings);
+    setHasUnsavedChanges(false);
+  }, [initialSettings]);
+
+  // Check if local settings differ from saved settings
+  const settingsDiffer = useCallback(() => {
+    return JSON.stringify(localSettings) !== JSON.stringify(initialSettings);
+  }, [localSettings, initialSettings]);
+
+  // Update hasUnsavedChanges whenever local settings change
+  useEffect(() => {
+    setHasUnsavedChanges(settingsDiffer());
+  }, [settingsDiffer]);
+
+  const updateLocalSetting = useCallback(
     <K extends keyof ConverterSettings>(key: K, value: ConverterSettings[K]) => {
-      onChange({ ...settings, [key]: value });
+      setLocalSettings(prev => ({ ...prev, [key]: value }));
     },
-    [settings, onChange]
+    []
   );
 
   const handleReset = useCallback(() => {
-    onChange(DEFAULT_SETTINGS);
-  }, [onChange]);
+    setLocalSettings(DEFAULT_SETTINGS);
+    setHasUnsavedChanges(true);
+  }, []);
+
+  const handleSave = useCallback(() => {
+    onChange(localSettings);
+    setHasUnsavedChanges(false);
+  }, [localSettings, onChange]);
 
   const cssFrameworkOptions: { value: CssFrameworkOption; label: string }[] = [
     { value: 'tailwind', label: 'Tailwind CSS' },
@@ -97,11 +125,11 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
   const handlePathChange = (value: string) => {
     if (validatePath(value) || value === '') {
-      updateSetting('outputPath', value);
+      updateLocalSetting('outputPath', value);
     }
   };
 
-  const isPathValid = validatePath(settings.outputPath);
+  const isPathValid = validatePath(localSettings.outputPath);
 
   return (
     <div data-testid="settings-panel" className={cn('w-full', className)}>
@@ -110,8 +138,24 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           <div className="flex items-center gap-2">
             <Settings className="h-5 w-5" />
             <h2 className="text-lg font-semibold">Converter Settings</h2>
+            {hasUnsavedChanges && (
+              <span className="text-xs text-orange-500 font-medium ml-2">
+                • Unsaved changes
+              </span>
+            )}
           </div>
           <div className="flex gap-2">
+            <Button
+              type="button"
+              variant={hasUnsavedChanges ? "default" : "outline"}
+              size="sm"
+              onClick={handleSave}
+              disabled={!hasUnsavedChanges}
+              title="Save settings to localStorage"
+            >
+              <Save className="h-4 w-4 mr-1" />
+              Save
+            </Button>
             {onExport && (
               <Button
                 type="button"
@@ -163,8 +207,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               </div>
               <Switch
                 id="typescript"
-                checked={settings.typescript}
-                onCheckedChange={(checked) => updateSetting('typescript', checked)}
+                checked={localSettings.typescript}
+                onCheckedChange={(checked) => updateLocalSetting('typescript', checked)}
                 aria-label="TypeScript toggle"
               />
             </div>
@@ -175,8 +219,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             <div className="space-y-2">
               <Label htmlFor="css-framework">CSS Framework</Label>
               <Select
-                value={settings.cssFramework}
-                onValueChange={(value) => updateSetting('cssFramework', value as CssFrameworkOption)}
+                value={localSettings.cssFramework}
+                onValueChange={(value) => updateLocalSetting('cssFramework', value as CssFrameworkOption)}
               >
                 <SelectTrigger id="css-framework">
                   <SelectValue />
@@ -201,8 +245,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                       type="radio"
                       id={`style-${option.value}`}
                       name="component-style"
-                      checked={settings.componentStyle === option.value}
-                      onChange={() => updateSetting('componentStyle', option.value)}
+                      checked={localSettings.componentStyle === option.value}
+                      onChange={() => updateLocalSetting('componentStyle', option.value)}
                       className="w-4 h-4"
                     />
                     <Label htmlFor={`style-${option.value}`} className="font-normal cursor-pointer">
@@ -219,8 +263,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             <div className="space-y-2">
               <Label htmlFor="naming-convention">Naming Convention</Label>
               <Select
-                value={settings.namingConvention}
-                onValueChange={(value) => updateSetting('namingConvention', value as NamingConvention)}
+                value={localSettings.namingConvention}
+                onValueChange={(value) => updateLocalSetting('namingConvention', value as NamingConvention)}
               >
                 <SelectTrigger id="naming-convention">
                   <SelectValue />
@@ -247,8 +291,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               </div>
               <Switch
                 id="inline-styles"
-                checked={settings.inlineStyles}
-                onCheckedChange={(checked) => updateSetting('inlineStyles', checked)}
+                checked={localSettings.inlineStyles}
+                onCheckedChange={(checked) => updateLocalSetting('inlineStyles', checked)}
               />
             </div>
 
@@ -264,8 +308,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               </div>
               <Switch
                 id="extract-assets"
-                checked={settings.extractAssets}
-                onCheckedChange={(checked) => updateSetting('extractAssets', checked)}
+                checked={localSettings.extractAssets}
+                onCheckedChange={(checked) => updateLocalSetting('extractAssets', checked)}
               />
             </div>
 
@@ -278,7 +322,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                 id="output-path"
                 name="output-path"
                 type="text"
-                value={settings.outputPath}
+                value={localSettings.outputPath}
                 onChange={(e) => handlePathChange(e.target.value)}
                 placeholder="./src/components"
                 aria-label="Output path"

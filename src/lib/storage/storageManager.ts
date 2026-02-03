@@ -449,7 +449,7 @@ export class StorageManager {
     const storage = this.store['storage'] as Storage;
     for (let i = 0; i < storage.length; i++) {
       const key = storage.key(i);
-      if (key && key.startsWith('mockup-converter-')) {
+      if (key && key.startsWith('mockto-')) {
         const value = storage.getItem(key);
         if (value) {
           const size = key.length + value.length;

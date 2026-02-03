@@ -287,7 +287,7 @@ export class SettingsStore {
       const keysToRemove: string[] = [];
       for (let i = 0; i < this.storage.length; i++) {
         const key = this.storage.key(i);
-        if (key && key.startsWith('mockup-converter-')) {
+        if (key && key.startsWith('mockto-')) {
           keysToRemove.push(key);
         }
       }
@@ -472,7 +472,7 @@ export class SettingsStore {
     let totalSize = 0;
     for (let i = 0; i < this.storage.length; i++) {
       const key = this.storage.key(i);
-      if (key && key.startsWith('mockup-converter-')) {
+      if (key && key.startsWith('mockto-')) {
         const value = this.storage.getItem(key);
         if (value) {
           totalSize += key.length + value.length;

@@ -39,6 +39,38 @@ describe('SettingsPanel Component', () => {
       render(<SettingsPanel settings={defaultSettings} onChange={mockOnChange} />);
       expect(screen.getByRole('combobox', { name: /css framework/i })).toBeInTheDocument();
     });
+
+    it('should display Save button (always visible)', () => {
+      render(<SettingsPanel settings={defaultSettings} onChange={mockOnChange} />);
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      expect(saveButton).toBeInTheDocument();
+      expect(saveButton).toBeDisabled();
+    });
+
+    it('should enable Save button when there are unsaved changes', async () => {
+      const user = userEvent.setup();
+      render(<SettingsPanel settings={defaultSettings} onChange={mockOnChange} />);
+
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      expect(saveButton).toBeDisabled();
+
+      // Make a change to trigger unsaved changes
+      const toggle = screen.getByRole('switch', { name: /typescript/i });
+      await user.click(toggle);
+
+      // Save button should now be enabled
+      expect(saveButton).not.toBeDisabled();
+    });
+
+    it('should show unsaved changes indicator', async () => {
+      const user = userEvent.setup();
+      render(<SettingsPanel settings={defaultSettings} onChange={mockOnChange} />);
+
+      const toggle = screen.getByRole('switch', { name: /typescript/i });
+      await user.click(toggle);
+
+      expect(screen.getByText(/unsaved changes/i)).toBeInTheDocument();
+    });
   });
 
   describe('TypeScript Toggle', () => {
@@ -48,12 +80,25 @@ describe('SettingsPanel Component', () => {
       expect(toggle).toBeChecked();
     });
 
-    it('should call onChange when toggled', async () => {
+    it('should not call onChange immediately when toggled', async () => {
       const user = userEvent.setup();
       render(<SettingsPanel settings={defaultSettings} onChange={mockOnChange} />);
 
       const toggle = screen.getByRole('switch', { name: /typescript/i });
       await user.click(toggle);
+
+      expect(mockOnChange).not.toHaveBeenCalled();
+    });
+
+    it('should call onChange when Save is clicked', async () => {
+      const user = userEvent.setup();
+      render(<SettingsPanel settings={defaultSettings} onChange={mockOnChange} />);
+
+      const toggle = screen.getByRole('switch', { name: /typescript/i });
+      await user.click(toggle);
+
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      await user.click(saveButton);
 
       expect(mockOnChange).toHaveBeenCalledWith(
         expect.objectContaining({ typescript: false })
@@ -67,7 +112,7 @@ describe('SettingsPanel Component', () => {
       expect(screen.getByText(/tailwind/i)).toBeInTheDocument();
     });
 
-    it('should call onChange when framework is changed', async () => {
+    it('should not call onChange immediately when framework is changed', async () => {
       const user = userEvent.setup();
       render(<SettingsPanel settings={defaultSettings} onChange={mockOnChange} />);
 
@@ -76,6 +121,22 @@ describe('SettingsPanel Component', () => {
 
       const cssModulesOption = screen.getByText('CSS Modules');
       await user.click(cssModulesOption);
+
+      expect(mockOnChange).not.toHaveBeenCalled();
+    });
+
+    it('should call onChange when Save is clicked after changing framework', async () => {
+      const user = userEvent.setup();
+      render(<SettingsPanel settings={defaultSettings} onChange={mockOnChange} />);
+
+      const select = screen.getByRole('combobox', { name: /css framework/i });
+      await user.click(select);
+
+      const cssModulesOption = screen.getByText('CSS Modules');
+      await user.click(cssModulesOption);
+
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      await user.click(saveButton);
 
       expect(mockOnChange).toHaveBeenCalledWith(
         expect.objectContaining({ cssFramework: 'css-modules' })
@@ -90,7 +151,7 @@ describe('SettingsPanel Component', () => {
       expect(defaultSettings.outputPath).toBe('./src/components');
     });
 
-    it('should call onChange when path is changed', async () => {
+    it('should not call onChange immediately when path is changed', async () => {
       const user = userEvent.setup();
       render(<SettingsPanel settings={defaultSettings} onChange={mockOnChange} />);
 
@@ -102,18 +163,36 @@ describe('SettingsPanel Component', () => {
       const input = screen.getByRole('textbox', { name: /output path/i }) as HTMLInputElement;
       expect(input).toBeInTheDocument();
 
-      // Type a valid path character by character (starting with .)
-      await user.click(input);
-      // Type each character of a valid path
-      for (const char of './new-path') {
-        await user.keyboard(char);
-      }
+      // Type a valid path using clear and type
+      await user.clear(input);
+      await user.type(input, './src/new-path');
 
-      // Verify onChange was called with the new path
-      const calls = mockOnChange.mock.calls;
-      // Find the last call that has outputPath
-      const pathCalls = calls.filter(call => call[0] && call[0].outputPath);
-      expect(pathCalls.length).toBeGreaterThan(0);
+      expect(mockOnChange).not.toHaveBeenCalled();
+    });
+
+    it('should call onChange when Save is clicked after changing path', async () => {
+      const user = userEvent.setup();
+      render(<SettingsPanel settings={defaultSettings} onChange={mockOnChange} />);
+
+      // Click the Advanced tab to make the output path visible
+      const advancedTab = screen.getByRole('tab', { name: /advanced/i });
+      await user.click(advancedTab);
+
+      // Now the input should be visible
+      const input = screen.getByRole('textbox', { name: /output path/i }) as HTMLInputElement;
+      expect(input).toBeInTheDocument();
+
+      // Clear the input and type a new path
+      await user.clear(input);
+      await user.type(input, './lib/components');
+
+      // Click Save button
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      await user.click(saveButton);
+
+      expect(mockOnChange).toHaveBeenCalledWith(
+        expect.objectContaining({ outputPath: './lib/components' })
+      );
     });
   });
 
@@ -123,7 +202,7 @@ describe('SettingsPanel Component', () => {
       expect(screen.getByRole('button', { name: /reset/i })).toBeInTheDocument();
     });
 
-    it('should reset settings on click', async () => {
+    it('should reset to default settings but not call onChange immediately', async () => {
       const user = userEvent.setup();
       const customSettings = { ...defaultSettings, typescript: false };
 
@@ -132,7 +211,53 @@ describe('SettingsPanel Component', () => {
       const resetButton = screen.getByRole('button', { name: /reset/i });
       await user.click(resetButton);
 
+      expect(mockOnChange).not.toHaveBeenCalled();
+    });
+
+    it('should call onChange with defaults when Save is clicked after reset', async () => {
+      const user = userEvent.setup();
+      const customSettings = { ...defaultSettings, typescript: false };
+
+      render(<SettingsPanel settings={customSettings} onChange={mockOnChange} />);
+
+      const resetButton = screen.getByRole('button', { name: /reset/i });
+      await user.click(resetButton);
+
+      // Should show unsaved changes indicator
+      expect(screen.getByText(/unsaved changes/i)).toBeInTheDocument();
+
+      // Click Save
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      await user.click(saveButton);
+
       expect(mockOnChange).toHaveBeenCalledWith(defaultSettings);
+    });
+  });
+
+  describe('Unsaved Changes Indicator', () => {
+    it('should appear when settings change', async () => {
+      const user = userEvent.setup();
+      render(<SettingsPanel settings={defaultSettings} onChange={mockOnChange} />);
+
+      const toggle = screen.getByRole('switch', { name: /typescript/i });
+      await user.click(toggle);
+
+      expect(screen.getByText(/unsaved changes/i)).toBeInTheDocument();
+    });
+
+    it('should disappear after saving', async () => {
+      const user = userEvent.setup();
+      render(<SettingsPanel settings={defaultSettings} onChange={mockOnChange} />);
+
+      const toggle = screen.getByRole('switch', { name: /typescript/i });
+      await user.click(toggle);
+
+      expect(screen.getByText(/unsaved changes/i)).toBeInTheDocument();
+
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      await user.click(saveButton);
+
+      expect(screen.queryByText(/unsaved changes/i)).not.toBeInTheDocument();
     });
   });
 });

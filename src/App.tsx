@@ -72,11 +72,11 @@ function App() {
     setSettings({
       typescript: storedSettings.component.outputFormat === OutputFormat.TSX,
       cssFramework: mapCssStrategyToOption(storedSettings.css.strategy) as 'tailwind' | 'css-modules' | 'vanilla',
-      componentStyle: 'functional',
+      componentStyle: storedSettings.component.componentStyle ?? 'functional',
       inlineStyles: !storedSettings.component.extractStyles,
-      extractAssets: true,
-      namingConvention: 'pascal-case',
-      outputPath: './src/components',
+      extractAssets: storedSettings.advanced.extractAssets ?? true,
+      namingConvention: storedSettings.component.namingConvention ?? 'pascal-case',
+      outputPath: storedSettings.ui.outputPath ?? './src/components',
     });
   }, []);
 
@@ -239,13 +239,15 @@ function App() {
   const handleSettingsChange = useCallback((newSettings: ConverterSettings) => {
     setSettings(newSettings);
 
-    // Persist to localStorage
+    // Persist to localStorage - save ALL settings
     settingsStore.updateSettings({
       component: {
         outputFormat: newSettings.typescript ? OutputFormat.TSX : OutputFormat.JSX,
         extractStyles: !newSettings.inlineStyles,
         includeReactImport: true,
         convertClassToClassName: true,
+        componentStyle: newSettings.componentStyle,
+        namingConvention: newSettings.namingConvention,
       },
       css: {
         strategy: mapOptionToCssStrategy(newSettings.cssFramework),
@@ -256,6 +258,12 @@ function App() {
         minClassNameLength: 3,
         optimize: false,
         targetFilename: 'styles',
+      },
+      advanced: {
+        extractAssets: newSettings.extractAssets,
+      },
+      ui: {
+        outputPath: newSettings.outputPath,
       },
       formatting: {
         indentStyle: 'spaces',
