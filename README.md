@@ -2,7 +2,7 @@
 
 > Transform HTML mockups into production-ready React components with intelligent component splitting and multi-format CSS conversion.
 
-[![Tests](https://img.shields.io/badge/tests-692%20passing-brightgreen)](https://github.com/yourusername/mockto)
+[![Tests](https://img.shields.io/badge/tests-701%20passing-brightgreen)](https://github.com/dgtise25/mockto)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 ## What is Mockto?
@@ -45,7 +45,7 @@
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/mockto.git
+git clone https://github.com/dgtise25/mockto.git
 cd mockto
 
 # Install dependencies
@@ -150,7 +150,7 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ```bash
 # Fork and clone
-git clone https://github.com/yourusername/mockto.git
+git clone https://github.com/dgtise25/mockto.git
 cd mockto
 
 # Install and test
