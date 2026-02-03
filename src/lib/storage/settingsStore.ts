@@ -23,7 +23,7 @@ import {
 /**
  * Application version
  */
-export const APP_VERSION = '0.1.0';
+export const APP_VERSION = '0.2.0';
 
 /**
  * Fields that should be encrypted in storage

@@ -14,13 +14,14 @@ import type {
   AssetBundle,
 } from '@/types/assets.types';
 import type { GeneratorResult, GeneratedComponent } from '@/types/generator.types';
+import { APP_VERSION } from '@/lib/storage/settingsStore';
 
 /**
  * Default package.json template
  */
 const DEFAULT_PACKAGE_JSON = {
   name: 'react-app-from-html',
-  version: '0.1.0',
+  version: APP_VERSION,
   private: true,
   type: 'module',
   scripts: {

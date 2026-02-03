@@ -20,7 +20,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { getConverterOrchestrator } from '@/lib/orchestrator';
-import { getSettingsStore } from '@/lib/storage/settingsStore';
+import { getSettingsStore, APP_VERSION } from '@/lib/storage/settingsStore';
 import type { ConversionResult } from '@/types/orchestrator.types';
 import type { ConverterSettings } from '@/types/ui.types';
 import { OutputFormat } from '@/types/generator.types';
@@ -357,7 +357,7 @@ function App() {
       <Header
         title="Mockto"
         subtitle="HTML Mockup to React Converter"
-        version="0.1.0"
+        version={APP_VERSION}
         showNavigation={false}
         showThemeToggle={true}
         showGitHubLink={true}
@@ -602,7 +602,7 @@ function App() {
       {/* Footer */}
       <Footer
         appName="Mockto"
-        version="0.1.0"
+        version={APP_VERSION}
         showVersion={true}
         showLinks={true}
         showBackToTop={true}
