@@ -8,6 +8,9 @@ dist
 # Testing
 coverage
 
+# Documentation
+docs
+
 # Environment
 .env
 .env.local
