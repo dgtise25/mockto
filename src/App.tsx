@@ -73,7 +73,7 @@ function App() {
       typescript: storedSettings.component.outputFormat === OutputFormat.TSX,
       cssFramework: mapCssStrategyToOption(storedSettings.css.strategy) as 'tailwind' | 'css-modules' | 'vanilla',
       componentStyle: 'functional',
-      inlineStyles: storedSettings.component.extractStyles,
+      inlineStyles: !storedSettings.component.extractStyles,
       extractAssets: true,
       namingConvention: 'pascal-case',
       outputPath: './src/components',
@@ -238,19 +238,47 @@ function App() {
   // Handle settings change
   const handleSettingsChange = useCallback((newSettings: ConverterSettings) => {
     setSettings(newSettings);
+
+    // Persist to localStorage
+    settingsStore.updateSettings({
+      component: {
+        outputFormat: newSettings.typescript ? OutputFormat.TSX : OutputFormat.JSX,
+        extractStyles: !newSettings.inlineStyles,
+        includeReactImport: true,
+        convertClassToClassName: true,
+      },
+      css: {
+        strategy: mapOptionToCssStrategy(newSettings.cssFramework),
+        preserveInline: newSettings.inlineStyles,
+        extractToSeparateFile: true,
+        classPrefix: '',
+        useCssVariables: false,
+        minClassNameLength: 3,
+        optimize: false,
+        targetFilename: 'styles',
+      },
+      formatting: {
+        indentStyle: 'spaces',
+        indentSize: 2,
+        printWidth: 80,
+        singleQuote: true,
+        trailingComma: 'es5',
+        semi: true,
+        prettier: true,
+      },
+    });
+
     // Also update the orchestrator settings
     orchestrator.updateSettings({
       component: {
-        ...settingsStore.loadSettings().component,
         outputFormat: newSettings.typescript ? OutputFormat.TSX : OutputFormat.JSX,
         extractStyles: !newSettings.inlineStyles,
       },
       css: {
-        ...settingsStore.loadSettings().css,
         strategy: mapOptionToCssStrategy(newSettings.cssFramework),
       },
     });
-  }, [orchestrator, settingsStore]);
+  }, [settingsStore]);
 
   // Get current output code for preview
   const getOutputCode = useCallback((): { code: string; filename: string } => {

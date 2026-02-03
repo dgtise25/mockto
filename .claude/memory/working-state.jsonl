@@ -456,3 +456,13 @@
 {"ts":1770149894154,"type":"command","cmd":"npx vitest run tests/integration/converter.test.ts 2>&1 | tail -25"}
 {"ts":1770149906027,"type":"command","cmd":"npx vitest run tests/unit/ tests/integration/ 2>&1 | tail -40"}
 {"ts":1770149919974,"type":"command","cmd":"npx vitest run tests/integration/converter.test.ts 2>&1 | grep -E \"(Test Files|Tests|PASS|FAIL)\" | head -10"}
+{"ts":1770149925226,"type":"command","cmd":"git add -A && git status --short"}
+{"ts":1770149934836,"type":"command","cmd":"git commit -m \"$(cat <<'EOF'\nfix: resolve integration test failures - all 692 tests passing\n\nFixed 3 failing integration tests in converter.test.ts by addressing\nthe component splitting and Prettier f"}
+{"ts":1770149942890,"type":"command","cmd":"./startenv.sh status"}
+{"ts":1770150021977,"type":"file_edit","file":"/media/lyle/datadisk/dev/mockupconverter/README.md","tool":"Write"}
+{"ts":1770150028056,"type":"file_edit","file":"/media/lyle/datadisk/dev/mockupconverter/LICENSE","tool":"Write"}
+{"ts":1770150037165,"type":"command","cmd":"git add README.md LICENSE && git commit -m \"$(cat <<'EOF'\ndocs: update README and add LICENSE for public release\n\nREADME improvements for public launch:\n- Add badges for test status and license\n- Add "}
+{"ts":1770150199570,"type":"file_edit","file":"/media/lyle/datadisk/dev/mockupconverter/src/App.tsx","tool":"Edit"}
+{"ts":1770150205983,"type":"file_edit","file":"/media/lyle/datadisk/dev/mockupconverter/src/App.tsx","tool":"Edit"}
+{"ts":1770150217052,"type":"command","cmd":"npx vitest run tests/unit/components/SettingsPanel.test.tsx 2>&1 | tail -30"}
+{"ts":1770150228229,"type":"command","cmd":"npx vitest run tests/ 2>&1 | grep -E \"(Test Files|Tests|PASS|FAIL)\" | head -10"}
