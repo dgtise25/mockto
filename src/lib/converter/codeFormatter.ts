@@ -260,7 +260,11 @@ export class CodeFormatter {
    */
   async loadConfigFromFile(filePath: string): Promise<prettier.Config | null> {
     try {
-      return await prettier.resolveConfigFile(filePath, process.cwd());
+      const configFile = await prettier.resolveConfigFile(filePath);
+      if (configFile) {
+        return await prettier.resolveConfig(process.cwd());
+      }
+      return null;
     } catch {
       return null;
     }

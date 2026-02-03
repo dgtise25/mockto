@@ -243,9 +243,12 @@ function App() {
     settingsStore.updateSettings({
       component: {
         outputFormat: newSettings.typescript ? OutputFormat.TSX : OutputFormat.JSX,
+        includePropTypes: newSettings.typescript,
         extractStyles: !newSettings.inlineStyles,
         includeReactImport: true,
         convertClassToClassName: true,
+        componentNameTemplate: '{{tag}} {{className}}',
+        generateIndexFiles: false,
         componentStyle: newSettings.componentStyle,
         namingConvention: newSettings.namingConvention,
       },
@@ -260,9 +263,20 @@ function App() {
         targetFilename: 'styles',
       },
       advanced: {
+        enableComponentSplitting: false,
+        maxFileSizeKB: 100,
+        enableSemanticAnalysis: false,
+        enablePatternDetection: false,
+        customTransformations: {},
         extractAssets: newSettings.extractAssets,
       },
       ui: {
+        theme: 'auto' as const,
+        editorFontSize: 14,
+        editorTabSize: 2,
+        showLineNumbers: true,
+        enableWordWrap: true,
+        previewPosition: 'right' as const,
         outputPath: newSettings.outputPath,
       },
       formatting: {
@@ -280,10 +294,24 @@ function App() {
     orchestrator.updateSettings({
       component: {
         outputFormat: newSettings.typescript ? OutputFormat.TSX : OutputFormat.JSX,
+        includePropTypes: newSettings.typescript,
         extractStyles: !newSettings.inlineStyles,
+        includeReactImport: true,
+        convertClassToClassName: true,
+        componentNameTemplate: '{{tag}} {{className}}',
+        generateIndexFiles: false,
+        componentStyle: newSettings.componentStyle,
+        namingConvention: newSettings.namingConvention,
       },
       css: {
         strategy: mapOptionToCssStrategy(newSettings.cssFramework),
+        preserveInline: newSettings.inlineStyles,
+        extractToSeparateFile: true,
+        classPrefix: '',
+        useCssVariables: false,
+        minClassNameLength: 3,
+        optimize: false,
+        targetFilename: 'styles',
       },
     });
   }, [settingsStore]);

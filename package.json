@@ -1,7 +1,7 @@
 {
   "name": "mockto",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "Mockto - HTML Mockup to React Converter",
   "description": "Convert HTML mockups into React components with AI-powered name generation and smart CSS conversion",
   "type": "module",

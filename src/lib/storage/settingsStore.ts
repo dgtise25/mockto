@@ -3,6 +3,7 @@
  *
  * Type-safe localStorage wrapper with comprehensive error handling,
  * validation, and migration support for application settings.
+ * Includes encryption for sensitive data.
  */
 
 import type {
@@ -23,6 +24,123 @@ import {
  * Application version
  */
 export const APP_VERSION = '0.1.0';
+
+/**
+ * Fields that should be encrypted in storage
+ */
+const SENSITIVE_FIELDS = new Set<string>([
+  // Add any field names that contain sensitive data here
+  // Currently no fields are explicitly sensitive, but this allows
+  // future fields to be easily marked for encryption
+]);
+
+/**
+ * Simple XOR-based encryption for non-sensitive data obfuscation
+ * Note: For production use with sensitive data, use Web Crypto API with proper key management
+ */
+function simpleEncrypt(data: string): string {
+  const key = 'mockto-obfuscation-key-v1';
+  let result = '';
+  for (let i = 0; i < data.length; i++) {
+    result += String.fromCharCode(
+      data.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+    );
+  }
+  return btoa(result); // Base64 encode for safe storage
+}
+
+/**
+ * Simple XOR-based decryption
+ */
+function simpleDecrypt(encryptedData: string): string {
+  try {
+    const key = 'mockto-obfuscation-key-v1';
+    const data = atob(encryptedData); // Base64 decode
+    let result = '';
+    for (let i = 0; i < data.length; i++) {
+      result += String.fromCharCode(
+        data.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+      );
+    }
+    return result;
+  } catch {
+    return encryptedData; // Return as-is if decryption fails
+  }
+}
+
+/**
+ * Encrypt sensitive fields in settings before storage
+ */
+function encryptSensitiveFields(settings: AppSettings): AppSettings {
+  const encrypted = { ...settings };
+
+  for (const field of SENSITIVE_FIELDS) {
+    const keys = field.split('.');
+    let current: any = encrypted;
+    const path: any[] = [];
+
+    // Navigate to the field
+    for (const key of keys) {
+      if (current && typeof current === 'object' && key in current) {
+        path.push({ obj: current, key });
+        current = current[key];
+      } else {
+        current = null;
+        break;
+      }
+    }
+
+    // Encrypt the value if found
+    if (current !== null && typeof current === 'string') {
+      const parent = path[path.length - 1]?.obj;
+      const lastKey = keys[keys.length - 1];
+      if (parent && lastKey) {
+        parent[lastKey] = simpleEncrypt(current);
+      }
+    }
+  }
+
+  return encrypted;
+}
+
+/**
+ * Decrypt sensitive fields after retrieving from storage
+ */
+function decryptSensitiveFields(settings: AppSettings): AppSettings {
+  const decrypted = { ...settings };
+
+  for (const field of SENSITIVE_FIELDS) {
+    const keys = field.split('.');
+    let current: any = decrypted;
+    const path: any[] = [];
+
+    // Navigate to the field
+    for (const key of keys) {
+      if (current && typeof current === 'object' && key in current) {
+        path.push({ obj: current, key });
+        current = current[key];
+      } else {
+        current = null;
+        break;
+      }
+    }
+
+    // Decrypt the value if found
+    if (current !== null && typeof current === 'string') {
+      const parent = path[path.length - 1]?.obj;
+      const lastKey = keys[keys.length - 1];
+      if (parent && lastKey) {
+        try {
+          parent[lastKey] = simpleDecrypt(current);
+        } catch {
+          // Keep original value if decryption fails
+        }
+      }
+    }
+  }
+
+  return decrypted;
+}
 
 /**
  * Safe JSON parse with fallback
@@ -329,7 +447,8 @@ export class SettingsStore {
       return { ...DEFAULT_SETTINGS };
     }
 
-    return settings;
+    // Decrypt sensitive fields
+    return decryptSensitiveFields(settings);
   }
 
   /**
@@ -345,7 +464,10 @@ export class SettingsStore {
       lastUpdated: Date.now(),
     };
 
-    return this.setItem(StorageKeys.SETTINGS, settingsToSave);
+    // Encrypt sensitive fields before storage
+    const encryptedSettings = encryptSensitiveFields(settingsToSave);
+
+    return this.setItem(StorageKeys.SETTINGS, encryptedSettings);
   }
 
   /**

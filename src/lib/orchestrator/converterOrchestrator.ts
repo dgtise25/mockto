@@ -147,7 +147,7 @@ export class ConverterOrchestrator {
         files: Array.from(generatedFiles.entries()).map(([name, data]) => ({
           fileName: name,
           content: data.content,
-          fileType: data.type as any,
+          fileType: data.type as 'component' | 'style' | 'asset',
         })),
         stages,
         warnings,
@@ -225,7 +225,12 @@ export class ConverterOrchestrator {
           duration: performance.now() - stageStart,
           message: error instanceof Error ? error.message : 'Parse failed',
         },
-        parsedDocument: null as any,
+        parsedDocument: {
+          root: { type: 'fragment', children: [], id: 'error-0', attributes: { html: {}, events: [] }, depth: 0 },
+          nodes: new Map(),
+          metadata: { source: html, nodeCount: 0, maxDepth: 0, uniqueTags: [], uniqueClasses: [], uniqueIds: [] },
+          sections: [],
+        },
         warnings: [`Parse error: ${error instanceof Error ? error.message : 'Unknown'}`],
       };
     }
@@ -529,11 +534,28 @@ export class ConverterOrchestrator {
 
     try {
       const zipGenerator = new ZipGenerator();
+
+      // Find entry point (first TSX/JSX file)
+      const firstComponent = Array.from(files.entries()).find(([name]) =>
+        name.endsWith('.tsx') || name.endsWith('.jsx')
+      );
+      const entryPoint = firstComponent
+        ? {
+            fileName: firstComponent[0],
+            content: firstComponent[1].content,
+            fileType: this.mapToGeneratorFileType(firstComponent[1].type),
+          }
+        : {
+            fileName: 'index.tsx',
+            content: "// Entry point\nexport { Component } from './Component';\n",
+            fileType: 'index' as const,
+          };
+
       const generatorResult: import('@/types/generator.types').GeneratorResult = {
         files: Array.from(files.entries()).map(([name, data]) => ({
           fileName: name,
           content: data.content,
-          fileType: data.type as any,
+          fileType: this.mapToGeneratorFileType(data.type),
         })),
         warnings: [],
         stats: {
@@ -543,7 +565,7 @@ export class ConverterOrchestrator {
           inlineStylesConverted: 0,
           linesOfCode: 0,
         },
-        entryPoint: undefined as any,
+        entryPoint,
       };
 
       const result = await zipGenerator.generateZip(generatorResult, {
@@ -622,6 +644,26 @@ export class ConverterOrchestrator {
 
       default:
         return '';
+    }
+  }
+
+  /**
+   * Map internal file type to Generator file type
+   */
+  private mapToGeneratorFileType(type: string): 'type' | 'style' | 'component' | 'index' | 'hook' {
+    switch (type) {
+      case 'component':
+        return 'component';
+      case 'style':
+        return 'style';
+      case 'asset':
+        return 'type';
+      case 'index':
+        return 'index';
+      case 'hook':
+        return 'hook';
+      default:
+        return 'component';
     }
   }
 

@@ -177,6 +177,8 @@ export interface ParserOptions {
   maxDepth?: number;
   /** Callback for progress updates */
   onProgress?: (progress: ParserProgress) => void;
+  /** Security: Allow dangerous elements (script, iframe, etc.) - default: false */
+  allowDangerousElements?: boolean;
 }
 
 /**

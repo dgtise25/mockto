@@ -17,6 +17,80 @@ import { AttributeExtractor } from './attributeExtractor';
 import { SemanticAnalyzer } from './semanticAnalyzer';
 
 /**
+ * Dangerous HTML elements that should be filtered during parsing
+ * These elements can pose security risks (XSS, code injection, etc.)
+ */
+const DANGEROUS_ELEMENTS = new Set([
+  'script',
+  'iframe',
+  'frame',
+  'object',
+  'embed',
+  'form',
+  'input',
+  'button',
+  'textarea',
+  'select',
+  'link',
+  'meta',
+  'style',
+]);
+
+/**
+ * Dangerous attributes that should be stripped from any element
+ * These can contain executable code or bypass security controls
+ */
+const DANGEROUS_ATTRIBUTES = new Set([
+  'onclick',
+  'onload',
+  'onerror',
+  'onmouseover',
+  'onfocus',
+  'onblur',
+  'onsubmit',
+  'onchange',
+  'onkeydown',
+  'onkeyup',
+  'onkeypress',
+  'ondblclick',
+  'onmousedown',
+  'onmouseup',
+  'onmousemove',
+  'onmouseout',
+  'onmouseenter',
+  'onmouseleave',
+  'onwheel',
+  'onscroll',
+  'onresize',
+  'oncontextmenu',
+  'ondrag',
+  'ondragstart',
+  'ondragend',
+  'ondragenter',
+  'ondragleave',
+  'ondragover',
+  'ondrop',
+  'oncopy',
+  'oncut',
+  'onpaste',
+  'onbeforeunload',
+  'onunload',
+  'onhashchange',
+  'onpopstate',
+  'onstorage',
+  'onmessage',
+  'onerror',
+  'onoffline',
+  'ononline',
+  'onpagehide',
+  'onpageshow',
+  'onrejectionhandled',
+  'onunhandledrejection',
+  'javascript:',
+  'data:',
+]);
+
+/**
  * Unique ID generator for parsed nodes
  */
 class IdGenerator {
@@ -95,7 +169,7 @@ export class HTMLParser {
 
     if (bodyChildren.length === 1 && bodyChildren[0] instanceof Element) {
       // Single root element - use it directly
-      root = this.processElement(
+      const processedRoot = this.processElement(
         bodyChildren[0] as Element,
         null,
         0,
@@ -104,6 +178,7 @@ export class HTMLParser {
         nodeCount,
         options
       );
+      root = processedRoot ?? this.createEmptyDocument().root;
     } else {
       // Multiple roots or mixed content - create a fragment
       const children: ParsedNode[] = [];
@@ -222,14 +297,23 @@ export class HTMLParser {
     maxDepth: { value: number },
     nodeCount: { value: number },
     options: ParserOptions
-  ): ParsedNode {
+  ): ParsedNode | null {
+    // Filter dangerous elements for security (XSS prevention)
+    const tagName = element.tagName.toLowerCase();
+    if (DANGEROUS_ELEMENTS.has(tagName) && !options.allowDangerousElements) {
+      console.warn(`[Security] Filtered dangerous element: <${tagName}>`);
+      return null;
+    }
+
     // Update max depth
     if (depth > maxDepth.value) {
       maxDepth.value = depth;
     }
 
-    const tagName = element.tagName.toLowerCase();
     const attributes = this.attributeExtractor.extract(element);
+
+    // Strip dangerous attributes for security
+    this.stripDangerousAttributes(element, attributes);
 
     // Process children
     const children: ParsedNode[] = [];
@@ -272,6 +356,55 @@ export class HTMLParser {
     nodeCount.value++;
 
     return node;
+  }
+
+  /**
+   * Strip dangerous attributes from an element
+   * This prevents XSS attacks through event handlers and dangerous protocols
+   */
+  private stripDangerousAttributes(
+    element: Element,
+    extractedAttributes: ReturnType<AttributeExtractor['extract']>
+  ): void {
+    // Check for dangerous attributes in the extracted attributes
+    if (extractedAttributes.html) {
+      for (const attrName of Object.keys(extractedAttributes.html)) {
+        const lowerAttr = attrName.toLowerCase();
+        if (DANGEROUS_ATTRIBUTES.has(lowerAttr)) {
+          console.warn(`[Security] Stripped dangerous attribute: ${attrName}`);
+          delete extractedAttributes.html[attrName];
+        } else {
+          // Check for dangerous protocols in href/src attributes
+          const value = extractedAttributes.html[attrName];
+          if (typeof value === 'string') {
+            const lowerValue = value.toLowerCase().trim();
+            if (lowerValue.startsWith('javascript:') ||
+                lowerValue.startsWith('data:') ||
+                lowerValue.startsWith('vbscript:')) {
+              console.warn(`[Security] Stripped dangerous protocol in ${attrName}: ${value}`);
+              delete extractedAttributes.html[attrName];
+            }
+          }
+        }
+      }
+    }
+
+    // Also check the raw DOM element and remove dangerous attributes
+    for (let i = element.attributes.length - 1; i >= 0; i--) {
+      const attr = element.attributes[i];
+      const lowerName = attr.name.toLowerCase();
+
+      if (DANGEROUS_ATTRIBUTES.has(lowerName)) {
+        element.removeAttribute(attr.name);
+      } else if (lowerName === 'href' || lowerName === 'src') {
+        const lowerValue = attr.value.toLowerCase().trim();
+        if (lowerValue.startsWith('javascript:') ||
+            lowerValue.startsWith('data:') ||
+            lowerValue.startsWith('vbscript:')) {
+          element.removeAttribute(attr.name);
+        }
+      }
+    }
   }
 
   /**
