@@ -2,7 +2,7 @@
  * App.tsx - Main Application Component
  *
  * Integrates all UI components with the conversion orchestrator
- * for the HTML to React Converter application.
+ * for Mockto - HTML Mockup to React Converter.
  */
 
 import { useState, useCallback, useEffect } from 'react';
@@ -291,13 +291,13 @@ function App() {
     <div className="min-h-screen flex flex-col bg-background">
       {/* Header */}
       <Header
-        title="HTML to React Converter"
-        subtitle="Convert HTML mockups to React components"
+        title="Mockto"
+        subtitle="HTML Mockup to React Converter"
         version="0.1.0"
         showNavigation={false}
         showThemeToggle={true}
         showGitHubLink={true}
-        githubUrl="https://github.com/lyle/mockupconverter"
+        githubUrl="https://github.com/lyle/mockto"
         showSearch={false}
         onSettingsClick={() => setShowSettings(!showSettings)}
         sticky
@@ -537,7 +537,7 @@ function App() {
 
       {/* Footer */}
       <Footer
-        appName="HTML to React Converter"
+        appName="Mockto"
         version="0.1.0"
         showVersion={true}
         showLinks={true}
@@ -545,7 +545,7 @@ function App() {
         license="MIT"
         links={{
           documentation: '/docs',
-          github: 'https://github.com/lyle/mockupconverter',
+          github: 'https://github.com/lyle/mockto',
           about: '/about',
         }}
       />

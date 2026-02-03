@@ -1,10 +1,28 @@
-# HTML Mockup to React Converter
+# Mockto
 
 > Transform HTML mockups into production-ready React components with intelligent component splitting and multi-format CSS conversion.
 
 ## Overview
 
-A browser-based web application that converts HTML files into organized, reusable React components. Built with React, TypeScript, and Vite, following SPARC methodology for systematic development.
+**Mockto** is a browser-based web application that converts HTML files into organized, reusable React components. Built with React, TypeScript, and Vite, following SPARC methodology for systematic development.
+
+## Features
+
+### 🎨 Smart Component Generation
+- **Intelligent Naming**: AI-powered component name generation from HTML structure
+- **Semantic Splitting**: Auto-detects sections (header, nav, main, footer) and repeating patterns
+- **Flexible Output**: Generate JSX or TSX with proper TypeScript interfaces
+
+### 🎯 Multi-Format CSS Support
+- **Tailwind CSS**: One-click utility class conversion
+- **CSS Modules**: Scoped, modular CSS generation
+- **Vanilla CSS**: Clean, traditional CSS extraction
+
+### ⚡ Developer Experience
+- **Multiple Input Methods**: Drag-and-drop file upload or paste HTML directly
+- **Live Preview**: See generated code with syntax highlighting
+- **Settings Persistence**: Remember your preferences across sessions
+- **Asset Extraction**: Automatically extract and bundle image assets
 
 ## Features
 
@@ -50,7 +68,7 @@ A browser-based web application that converts HTML files into organized, reusabl
 ```bash
 # Clone repository
 git clone <repository-url>
-cd mockupconverter
+cd mockto
 
 # Install dependencies
 npm install
@@ -80,7 +98,7 @@ npm run typecheck    # Check TypeScript types
 
 ### Project Structure
 ```
-mockupconverter/
+mockto/
 ├── src/
 │   ├── components/       # UI components
 │   │   ├── ui/          # shadcn/ui components

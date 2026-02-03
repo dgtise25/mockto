@@ -1,7 +1,9 @@
 {
-  "name": "mockupconverter",
+  "name": "mockto",
   "private": true,
   "version": "0.1.0",
+  "title": "Mockto - HTML Mockup to React Converter",
+  "description": "Convert HTML mockups into React components with AI-powered name generation and smart CSS conversion",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,6 +16,25 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "typecheck": "tsc --noEmit"
   },
+  "bin": {
+    "mockto": "./bin/cli.js"
+  },
+  "author": "Mockto",
+  "homepage": "https://github.com/yourusername/mockto",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/mockto.git"
+  },
+  "keywords": [
+    "react",
+    "html",
+    "converter",
+    "mockup",
+    "component",
+    "generator",
+    "tailwind",
+    "css"
+  ],
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-label": "^2.1.8",

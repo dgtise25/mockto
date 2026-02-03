@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="100" height="100" rx="20" fill="url(#gradient)"/>
+  <!-- M letter stylized -->
+  <path d="M 30 30 L 30 70 L 40 70 L 40 45 L 50 60 L 60 45 L 60 70 L 70 70 L 70 30 L 60 30 L 50 50 L 40 30 Z" fill="white"/>
+  <!-- Code brackets -->
+  <path d="M 20 35 L 15 50 L 20 65 M 80 35 L 85 50 L 80 65" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
