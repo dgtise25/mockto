@@ -333,7 +333,7 @@ function App() {
         showNavigation={false}
         showThemeToggle={true}
         showGitHubLink={true}
-        githubUrl="https://github.com/lyle/mockto"
+        githubUrl="https://github.com/dgtise25/mockto"
         showSearch={false}
         onSettingsClick={() => setShowSettings(!showSettings)}
         sticky
@@ -581,7 +581,7 @@ function App() {
         license="MIT"
         links={{
           documentation: '/docs',
-          github: 'https://github.com/lyle/mockto',
+          github: 'https://github.com/dgtise25/mockto',
           about: '/about',
         }}
       />

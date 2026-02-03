@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
   showThemeToggle = true,
   showGitHubLink = true,
   showSearch = true,
-  githubUrl = 'https://github.com',
+  githubUrl = 'https://github.com/dgtise25/mockto',
   version,
   activeLink,
   onSettingsClick,
